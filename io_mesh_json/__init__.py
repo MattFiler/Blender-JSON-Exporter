@@ -1,34 +1,18 @@
 bl_info = {
-    "name":         "JSON Mesh Export",
-    "author":       "Nathan Faucett",
+    "name":         "JSON Scene Export",
+    "author":       "Matt Filer, Nathan Faucett",
     "blender":      (2,6,8),
     "version":      (0,0,1),
-    "location":     "File > Import-Export",
-    "description":  "Import-Export JSON data format (only export avalable now)",
-    "category":     "Import-Export",
-    "wiki_url":     "https://github.com/lonewolfgames",
-    "tracker_url":  "https://github.com/lonewolfgames",
+    "location":     "File > Export",
+    "description":  "Export scene data in a JSON format.",
+    "category":     "Export",
+    "wiki_url":     "https://github.com/MattFiler/Blender-JSON-Exporter",
+    "tracker_url":  "https://github.com/MattFiler/Blender-JSON-Exporter",
 }
 
 import bpy
 from bpy.props import *
 from bpy_extras.io_utils import ExportHelper, ImportHelper
-
-
-# ################################################################
-# Import JSON
-# ################################################################
-
-class ImportJSON( bpy.types.Operator, ImportHelper ):
-    bl_idname = "import.json"
-    bl_label = "Import JSON"
-
-    filename_ext = ".json"
-    filter_glob = StringProperty( default="*.json", options={"HIDDEN"})
-    
-    def execute( self, context ):
-        import io_mesh_json.import_json
-        return io_mesh_json.import_json.load( self, context, **self.properties )
 
 
 # ################################################################
@@ -68,18 +52,13 @@ def menu_func_export( self, context ):
     default_path = bpy.data.filepath.replace(".blend", ".json")
     self.layout.operator( ExportJSON.bl_idname, text="JSON (.json)").filepath = default_path
 
-def menu_func_import( self, context ):
-    self.layout.operator( ImportJSON.bl_idname, text="JSON (.json)")
-
 def register():
     bpy.utils.register_module(__name__)
     bpy.types.INFO_MT_file_export.append(menu_func_export)
-    bpy.types.INFO_MT_file_import.append(menu_func_import)
 
 def unregister():
     bpy.utils.unregister_module(__name__)
     bpy.types.INFO_MT_file_export.remove(menu_func_export)
-    bpy.types.INFO_MT_file_import.remove(menu_func_import)
 
 if __name__ == "__main__":
     register()
